@@ -1,16 +1,26 @@
+# from tkinter.ttk import Style
+import os
 import pandas as pd
+# import numpy as np
 import datetime as dt
 import plotly.express as px
 import plotly.graph_objects as go
-import dash_core_components as dcc
-import dash_html_components as html
+import dash
+from dash import dcc
+# import dash_core_components as dcc
+from dash import html
+# import dash_html_components as html
+# from plotly.subplots import make_subplots
+# import matplotlib.pyplot as plt
 from jupyter_dash import JupyterDash  # pip install dash
-
+# import dash_cytoscape as cyto
 from dash.dependencies import Output, Input
 
 
 # external JavaScript files
 external_scripts = [
+    # 'https://www.google-analytics.com/analytics.js',
+    # {'src': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js'},
     {
         'src': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js',
         'integrity': 'sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2',
@@ -30,17 +40,17 @@ external_stylesheets = [
     'https://www.w3schools.com/w3css/4/w3.css'
 ]
 
+dir=os.path.dirname(os.path.realpath(__file__))
+# print(dir)
 
-df = pd.read_excel(
-    'Book2.xlsx')
+df = pd.read_excel(os.path.join(dir,'Book2.xlsx'))
+
 df.drop(df[df['Transaction Type'] == 'Deposit'].index, inplace=True)
 df.reset_index(drop=True, inplace=True)
-df_trade = pd.read_excel(
-    'Item_file_1.xlsx')
-df_item = pd.read_excel(
-    'Trade_file_1.xlsx')
+df_trade = pd.read_excel(os.path.join(dir,'Item_file_1.xlsx'))
+df_item = pd.read_csv(os.path.join(dir,'Trade_File_1.csv'))
 df_item.columns = ['Product/Service', 'Category']
-df['day'] = pd.to_datetime(df['Date'], format="%d-%m-%Y").dt.day  
+df['day'] = pd.to_datetime(df['Date'], format="%d-%m-%Y").dt.day  # inegrate
 df['Date_month'] = pd.to_datetime(df['Date'], format="%d-%m-%Y").dt.month
 df['Date_year'] = pd.to_datetime(df['Date'], format="%d-%m-%Y").dt.year
 df['Date_Month1'] = pd.to_datetime(df['Date'], format="%d-%m-%Y").dt.month
@@ -48,7 +58,7 @@ day = []  # inegrate
 for i in range(len(df)):  # inegrate
     x1 = str(df['Date_year'][i])+'-'+str(df['Date_month'][i]) + \
         '-'+str(df['day'][i])  # inegrate
-    day.append(x1) 
+    day.append(x1)  # inegrate
 df['day'] = day  # inegrate
 df['Date_Month1'].replace({1: 'Jan', 2: 'Feb', 3: 'March', 4: 'Apr', 5: 'May', 6: 'June',
                           7: 'July', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'}, inplace=True)  # inegrate
@@ -639,11 +649,11 @@ def name_to_figure(fig_name, aTrade, aCategory, aHead, date1, date2, date3, inpu
         return dcc.Graph(figure=figure2), dcc.Graph(figure=figure3)
 
 
-if __name__ == '__main__':
-    app.run_server(debug=False)
+# if __name__ == '__main__':
+#     app.run_server(mode="external")
 
-dt.datetime.now().date()
-
-a = 'Q1-2021'
-i = a.split('-')
-i[0]
+# dt.datetime.now().date()
+#
+# a = 'Q1-2021'
+# i = a.split('-')
+# i[0]
